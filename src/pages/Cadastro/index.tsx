@@ -1,31 +1,55 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import styles from './styles.module.css'
 import { FaEdit, FaTrash } from 'react-icons/fa'
+import api from '../../services/api' // 👈 caminho para o arquivo que criou
 
 interface Startup {
   nome: string
-  ano: string
+  ano: number
   slogan: string
 }
 
-export default function Cadastro(){
+export default function Cadastro() {
   const [startups, setStartups] = useState<Startup[]>([])
   const [nome, setNome] = useState<string>('')
   const [ano, setAno] = useState<string>('')
   const [slogan, setSlogan] = useState<string>('')
 
-  const handleCadastrar = (): void => {
+  const handleCadastrar = async (): Promise<void> => {
     if (startups.length >= 8 || !nome || !ano || !slogan) return
-    setStartups([...startups, { nome, ano, slogan }])
-    setNome('')
-    setAno('')
-    setSlogan('')
+
+    try {
+      await api.post('/startup', {
+        nome,
+        ano: parseInt(ano), // backend espera Integer
+        slogan
+      })
+
+      // Atualiza a lista após cadastro
+      const response = await api.get('/startup')
+      setStartups(response.data)
+
+      // Limpa os campos
+      setNome('')
+      setAno('')
+      setSlogan('')
+    } catch (error) {
+      console.error('Erro ao cadastrar startup:', error)
+    }
   }
+
+  // Carrega startups já cadastradas do banco ao abrir a página
+  useEffect(() => {
+    api.get('/startup')
+      .then(response => setStartups(response.data))
+      .catch(error => console.error('Erro ao buscar startups:', error))
+  }, [])
 
   const handleRemover = (index: number): void => {
     const novas = [...startups]
     novas.splice(index, 1)
     setStartups(novas)
+    // 🟡 Aqui você pode fazer DELETE no backend depois se quiser
   }
 
   return (
