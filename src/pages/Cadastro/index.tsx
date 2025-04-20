@@ -35,7 +35,8 @@ export default function Cadastro() {
       await api.post('/startup', {
         nome,
         ano: parseInt(ano), // backend espera Integer
-        slogan
+        slogan,
+        pontuacao:70
       })
 
       // Atualiza a lista após cadastro

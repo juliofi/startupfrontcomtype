@@ -28,4 +28,12 @@
   .startup:last-child {
     border-bottom: none;
   }
+
+  .finalizada {
+    background-color: #dddddd;
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none; /* Opcional: bloqueia interações totalmente */
+  }
+  
   

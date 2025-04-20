@@ -1,9 +1,10 @@
 import styles from './styles.module.css'
 
 interface Batalha {
-    startupA: string
-    startupB: string
+    startupA: { nome: string; pontuacao: number }
+    startupB: { nome: string; pontuacao: number }
     selecionada: boolean
+    finalizada: boolean
 }
 
 interface Props {
@@ -17,11 +18,23 @@ export default function Chaveamento({ batalhas, onSelecionar }: Props) {
             {batalhas.map((batalha, index) => (
                 <div
                     key={index}
-                    className={`${styles.batalha} ${batalha.selecionada ? styles.ativa : ''}`}
-                    onClick={() => onSelecionar(index)}
+                    className={`
+                  ${styles.batalha} 
+                  ${batalha.selecionada ? styles.ativa : ''} 
+                  ${batalha.finalizada ? styles.finalizada : ''}
+                `}
+                    onClick={() => {
+                        if (!batalha.finalizada) onSelecionar(index)
+                    }}
                 >
-                    <div className={styles.startup}>{batalha.startupA}</div>
-                    <div className={styles.startup}>{batalha.startupB}</div>
+
+                    <div className={styles.startupA}>
+                        {batalha.startupA.nome} - {batalha.startupA.pontuacao} pts
+                    </div>
+                    <div className={styles.startupB}>
+                        {batalha.startupB.nome} - {batalha.startupB.pontuacao} pts
+                    </div>
+
                 </div>
             ))}
         </div>

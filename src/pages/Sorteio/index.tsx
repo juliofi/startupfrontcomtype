@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Chaveamento from '../../components/Chaveamento'
 import styles from './styles.module.css'
 import api from '../../services/api'
@@ -25,6 +25,22 @@ interface Batalha {
 export default function Sorteio() {
   const navigate = useNavigate()
 
+
+  const handleReset = async () => {
+    const confirmar = confirm("Tem certeza que deseja resetar o torneio? Isso apagará todas as startups e batalhas.")
+    if (!confirmar) return
+
+    try {
+      await api.delete('/torneio/reset')
+      alert('Torneio resetado com sucesso!')
+      setBatalhas([]) // limpa a tela
+    } catch (error) {
+      console.error("Erro ao resetar torneio:", error)
+      alert("Erro ao resetar torneio.")
+    }
+  }
+
+
   const handleAdministrar = () => {
     const batalhaSelecionada = batalhas.find(b => b.selecionada)
 
@@ -39,6 +55,47 @@ export default function Sorteio() {
 
 
   const [batalhas, setBatalhas] = useState<Batalha[]>([])
+
+  useEffect(() => {
+    const carregarBatalhas = async () => {
+      try {
+        const response = await api.get<Batalha[]>('/torneio/batalhas')
+        if (response.data.length > 0) {
+          const batalhasCarregadas = response.data.map((b, i) => ({
+            ...b,
+            selecionada: i === 0
+          }))
+          setBatalhas(batalhasCarregadas)
+        }
+      } catch (error) {
+        alert('Erro ao carregar batalhas. Tente novamente.')
+        console.error(error)
+      }
+    }
+
+    carregarBatalhas()
+  }, [])
+
+  useEffect(() => {
+    const todasFinalizadas = batalhas.length > 0 && batalhas.every(b => b.finalizada)
+
+    if (todasFinalizadas) {
+      api.post<Batalha[]>('/torneio/proxima-fase')
+        .then(response => {
+          const novasBatalhas = response.data.map((b, i) => ({
+            ...b,
+            selecionada: i === 0
+          }))
+          setBatalhas(novasBatalhas)
+        })
+        .catch(err => {
+          console.error("Erro ao avançar para próxima fase:", err)
+          alert("Erro ao avançar para próxima fase. Tente novamente.")
+        })
+    }
+  }, [batalhas])
+
+
 
   const embaralhar = async () => {
     try {
@@ -62,21 +119,44 @@ export default function Sorteio() {
     })))
   }
 
+
+  const algumaFinalizada = batalhas.some(b => b.finalizada)
+
   return (
     <div className={styles.container}>
       <h1 className={styles.titulo}>Batalhas</h1>
 
       <Chaveamento
         batalhas={batalhas.map(b => ({
-          startupA: b.startupA.nome,
-          startupB: b.startupB.nome,
-          selecionada: !!b.selecionada
+          startupA: {
+            nome: b.startupA.nome,
+            pontuacao: b.pontuacaoA
+          },
+          startupB: {
+            nome: b.startupB.nome,
+            pontuacao: b.pontuacaoB
+          },
+          selecionada: !!b.selecionada,
+          finalizada: b.finalizada
         }))}
         onSelecionar={selecionarBatalha}
       />
 
+
+
+
       <div className={styles.botoes}>
-        <button className={styles.embaralhar} onClick={embaralhar}>embaralhar</button>
+
+        <button className={styles.resetar} onClick={handleReset}>resetar</button>
+
+        <button
+          className={styles.embaralhar}
+          onClick={embaralhar}
+          disabled={algumaFinalizada}
+        >
+          embaralhar
+        </button>
+
         <button className={styles.administrar} onClick={handleAdministrar} >administrar</button>
       </div>
 

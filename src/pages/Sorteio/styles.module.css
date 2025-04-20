@@ -37,6 +37,22 @@
     cursor: pointer;
   }
 
+  .embaralhar:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .resetar {
+    background-color: crimson;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  
+
 
 
 

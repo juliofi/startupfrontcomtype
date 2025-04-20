@@ -1,25 +1,91 @@
-import styles from './styles.module.css'
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import api from '../../services/api'
+import styles from './styles.module.css'
 
 interface Batalha {
+    id: number
     startupA: {
+        id: number
         nome: string
     }
     startupB: {
+        id: number
         nome: string
     }
+    pontuacaoA: number
+    pontuacaoB: number
+    finalizada: boolean
+    vencedora: string | null
 }
+
 
 
 export default function Administrar() {
     const [batalha, setBatalha] = useState<Batalha | null>(null)
+    const navigate = useNavigate()
+
+
+    const handleFinalizar = async () => {
+        if (!batalha) return
+
+        let pontosA = batalha.pontuacaoA
+        let pontosB = batalha.pontuacaoB
+
+
+        eventos.forEach((_, index) => {
+            if (checksA[index]) pontosA += pontuacoes[index]
+            if (checksB[index]) pontosB += pontuacoes[index]
+        })
+
+        // Shark Fight
+        if (pontosA === pontosB) {
+            const vencedorAleatorio = Math.random() < 0.5 ? 'A' : 'B'
+            if (vencedorAleatorio === 'A') pontosA += 2
+            else pontosB += 2
+        }
+
+        const vencedora =
+            pontosA > pontosB ? batalha.startupA.nome :
+                pontosB > pontosA ? batalha.startupB.nome : null
+
+        if (!vencedora) {
+            alert("Erro ao determinar a vencedora.")
+            return
+        }
+
+        const pontuacaoFinalA = vencedora === batalha.startupA.nome ? pontosA + 30 : pontosA
+        const pontuacaoFinalB = vencedora === batalha.startupB.nome ? pontosB + 30 : pontosB
+
+        try {
+            await api.put(`/torneio/batalha/${batalha.id}`, {
+                id: batalha.id,
+                pontuacaoA: pontuacaoFinalA,
+                pontuacaoB: pontuacaoFinalB,
+                finalizada: true,
+                vencedora: vencedora
+            })
+
+            alert("Batalha finalizada com sucesso!")
+            navigate('/sorteio')
+        } catch (error) {
+            console.error("Erro ao finalizar batalha:", error)
+            alert("Erro ao finalizar batalha.")
+        }
+    }
+
+
 
     useEffect(() => {
         const batalhaSalva = localStorage.getItem('batalhaSelecionada')
         if (batalhaSalva) {
-            setBatalha(JSON.parse(batalhaSalva))
+            const batalhaCarregada: Batalha = JSON.parse(batalhaSalva)
+            setBatalha(batalhaCarregada)
+            setPontosA(batalhaCarregada.pontuacaoA)
+            setPontosB(batalhaCarregada.pontuacaoB)
         }
     }, [])
+    
 
     const eventos = [
         'Pitch convincente',
@@ -29,8 +95,8 @@ export default function Administrar() {
         'Fake news no pitch'
     ]
 
-    const [pontosA, setPontosA] = useState(70)
-    const [pontosB, setPontosB] = useState(70)
+    const [pontosA, setPontosA] = useState<number>(0)
+    const [pontosB, setPontosB] = useState<number>(0)
     const [checksA, setChecksA] = useState<boolean[]>(Array(eventos.length).fill(false))
     const [checksB, setChecksB] = useState<boolean[]>(Array(eventos.length).fill(false))
 
@@ -68,7 +134,7 @@ export default function Administrar() {
                                         novo[i] = !novo[i]
                                         setChecksA(novo)
 
-                                        const total = 70 + novo.reduce((acc, marcado, idx) => acc + (marcado ? pontuacoes[idx] : 0), 0)
+                                        const total = batalha.pontuacaoA + novo.reduce((acc, marcado, idx) => acc + (marcado ? pontuacoes[idx] : 0), 0)
                                         setPontosA(total)
                                     }}
                                 />
@@ -94,7 +160,7 @@ export default function Administrar() {
                                         novo[i] = !novo[i]
                                         setChecksB(novo)
 
-                                        const total = 70 + novo.reduce((acc, marcado, idx) => acc + (marcado ? pontuacoes[idx] : 0), 0)
+                                        const total = batalha.pontuacaoB + novo.reduce((acc, marcado, idx) => acc + (marcado ? pontuacoes[idx] : 0), 0)
                                         setPontosB(total)
                                     }}
                                 />
@@ -114,7 +180,7 @@ export default function Administrar() {
                 </div>
             </div>
 
-            <button className={styles.finalizar}>finalizar</button>
+            <button className={styles.finalizar} onClick={handleFinalizar}>finalizar</button>
         </div>
     )
 }
