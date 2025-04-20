@@ -1,0 +1,31 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .batalha {
+    display: flex;
+    flex-direction: column;
+    border: 2px solid black;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  .ativa {
+    border-color: black;
+    background-color: #e0e0e0;
+  }
+  
+  .startup {
+    padding: 4px 8px;
+    border-bottom: 1px solid #aaa;
+    font-weight: 400;
+    text-align: center;
+  }
+  
+  .startup:last-child {
+    border-bottom: none;
+  }
+  
