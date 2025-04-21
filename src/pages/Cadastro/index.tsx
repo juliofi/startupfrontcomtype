@@ -41,13 +41,24 @@ export default function Cadastro() {
   };
 
 
-  const handleProsseguir = () => {
-    if ([4, 6, 8].includes(startups.length)) {
-      navigate('/sorteio')
-    } else {
+  const handleProsseguir = async () => {
+    if (![4, 6, 8].includes(startups.length)) {
       alert('É necessário ter 4, 6 ou 8 startups cadastradas para iniciar o torneio.')
+      return
+    }
+  
+    try {
+      // 1. Envia o POST para iniciar o torneio
+      await api.post('/torneio/iniciar')
+  
+      // 2. Navega para o sorteio
+      navigate('/sorteio')
+    } catch (error) {
+      console.error('Erro ao iniciar o torneio:', error)
+      alert('Erro ao iniciar o torneio.')
     }
   }
+  
 
 
   const handleCadastrar = async (): Promise<void> => {
@@ -108,15 +119,22 @@ export default function Cadastro() {
       <div className={styles.lista}>
         {[...Array(8)].map((_, i) => (
           <div key={i} className={styles.item}>
-            <span>{i + 1}. {startups[i]?.nome || ''}</span>
+            <span>
+              <span className={styles.numero}>{i + 1}.</span>{' '}
+              {startups[i]?.nome || ''}
+            </span>
             {startups[i] && (
               <span className={styles.icones}>
-                <FaTrash className={styles.icone} onClick={() => handleRemover(i)} />
+                <FaTrash
+                  className={styles.icone}
+                  onClick={() => handleRemover(i)}
+                />
               </span>
             )}
           </div>
         ))}
       </div>
+
 
       <div className={styles.form}>
         <div className={styles.linha}>
@@ -142,7 +160,7 @@ export default function Cadastro() {
           value={slogan}
           onChange={e => setSlogan(e.target.value)}
         />
-        <button onClick={handleCadastrar}>cadastrar</button>
+        <button className={styles.cadastrar} onClick={handleCadastrar}>cadastrar</button>
       </div>
 
       <button className={styles.prosseguir} onClick={handleProsseguir}>prosseguir</button>

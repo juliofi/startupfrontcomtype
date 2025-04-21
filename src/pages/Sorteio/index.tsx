@@ -61,10 +61,8 @@ export default function Sorteio() {
       try {
         const response = await api.get<Batalha[]>('/torneio/batalhas')
         if (response.data.length > 0) {
-          const batalhasCarregadas = response.data.map((b, i) => ({
-            ...b,
-            selecionada: i === 0
-          }))
+          const batalhasCarregadas = response.data.map(b => ({ ...b }))
+          
           setBatalhas(batalhasCarregadas)
         }
       } catch (error) {
@@ -88,10 +86,10 @@ export default function Sorteio() {
             return
           }
 
-          const novasBatalhas = response.data.map((b, i) => ({
-            ...b,
-            selecionada: i === 0
+          const novasBatalhas = response.data.map(b => ({
+            ...b
           }))
+          
           setBatalhas(novasBatalhas)
         })
         .catch(err => {

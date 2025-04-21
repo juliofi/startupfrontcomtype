@@ -7,8 +7,9 @@
   
   .batalha {
     display: flex;
+    padding: 4px 8px;
     flex-direction: column;
-    border: 2px solid black;
+    border: 1px solid #777777;
     border-radius: 8px;
     cursor: pointer;
   }

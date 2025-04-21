@@ -3,31 +3,33 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
     gap: 16px;
 }
 
 .titulo {
-    margin: 0;
+    margin: 0px 0px 8px 0px;
     padding: 0;
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 400;
 }
 
   
   .lista {
+    border: 1px solid #777777;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
     padding: 12px 0px;
-    border: 2px solid #000000;
     border-radius: 8px;
-    width: 240px;
+    width: 100%;
   }
   
   .item {
     display: flex;
     justify-content: space-between;
-    padding: 0px 12px;
+    padding: 6px;
+    width: 86%;
   }
   
   .icones {
@@ -40,11 +42,10 @@
   }
   
   .form {
-    gap: 8px;
     display: flex;
     flex-direction: column;
-    width: 240px;
-   
+    width: 100%;
+    gap: 8px;
   }
   
   .linha {
@@ -53,23 +54,47 @@
   }
   
   .inputNome{
-    width: 158px;
+    width: 70%;
     padding: 8px;
-    border: 1px solid black;
+    border: 1px solid #777777;
     border-radius: 4px;
   }
   .inputAno{
-    width: 40px;
+    width: 17%;
     padding: 8px;
-    border: 1px solid black;
+    border: 1px solid #777777;
     border-radius: 4px;
   }
   .inputSlogan{
-    width: 222px;
+    width: 320px;
     padding: 8px;
-    border: 1px solid black;
+    border: 1px solid #777777;
     border-radius: 4px;
   }
+
+  .inputNome::placeholder,
+  .inputAno::placeholder,
+  .inputSlogan::placeholder{
+    color: #777777;
+  }
+
+  .inputNome:focus,
+  .inputAno:focus,
+  .inputSlogan:focus{
+    border: 1px solid black;
+    outline: 1px solid black;
+  }
+
+  input,
+input:focus,
+input:focus-visible,
+input:focus-within,
+input:hover,
+input:active {
+  outline: none;
+  box-shadow: none;
+  border: 1px solid black;
+}
 
 
   
@@ -86,6 +111,25 @@
     background-color: #999;
     cursor: not-allowed;
   }
+
+  .cadastrar{
+    color: #FFFFFF;
+    background-color: #777777;
+    padding: 10px;
+    border: 1px solid #BBBBBB;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .cadastrar:hover{
+    background-color: #666666;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .cadastrar:disabled{
+    background-color: #999;
+    cursor: not-allowed;
+  }
   
   .form > button {
     background-color: gray;
@@ -97,10 +141,35 @@
     font-size: 12px;
     width: 100%;
     height: 40px;
-    background-color: #000000;
+    background-color: #222222;
     color: #FFFFFF;
     cursor: pointer;
     border-radius: 8px;
     border: 1px solid #333333
   }
+
+  .prosseguir:hover{
+    background-color: #111111;
+  }
+
+  .numero {
+    color: #777777;
+    margin-right: 4px;
+  }
+  
+  .icone {
+    color: #777777;
+    transition: transform 0.1s ease, color 0.1s ease;
+  }
+  
+  .icone:hover {
+    color: #555555; /* vermelho no hover */
+    cursor: pointer;
+  }
+  
+  .icone:active {
+    transform: scale(0.8); /* efeito de "afundar" no clique */
+  }
+  
+  
   

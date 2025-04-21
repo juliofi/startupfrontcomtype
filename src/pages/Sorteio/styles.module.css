@@ -9,7 +9,7 @@
 .titulo {
     margin: 0;
     padding: 0;
-    font-size: px;
+    font-size: 28px;
     font-weight: 400;
 }
 
@@ -30,11 +30,15 @@
 
   .administrar{
     color: #FFFFFF;
-    background-color: #000000;
+    background-color: #222222;
     padding: 10px;
     border: 1px solid #BBBBBB;
     border-radius: 6px;
     cursor: pointer;
+  }
+
+  .administrar:hover{
+    background-color: #111111;
   }
 
   .embaralhar:disabled {
