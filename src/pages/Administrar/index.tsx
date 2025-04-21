@@ -57,7 +57,23 @@ export default function Administrar() {
         const pontuacaoFinalA = vencedora === batalha.startupA.nome ? pontosA + 30 : pontosA
         const pontuacaoFinalB = vencedora === batalha.startupB.nome ? pontosB + 30 : pontosB
 
+        // Mapear contadores a partir dos checkboxes
+        const contPitchA = Number(checksA[0])
+        const contBugA = Number(checksA[1])
+        const contTracaoA = Number(checksA[2])
+        const contInvestidorA = Number(checksA[3])
+        const contPenalidadeA = Number(checksA[4])
+
+        const contPitchB = Number(checksB[0])
+        const contBugB = Number(checksB[1])
+        const contTracaoB = Number(checksB[2])
+        const contInvestidorB = Number(checksB[3])
+        const contPenalidadeB = Number(checksB[4])
+
+
+
         try {
+            // 1. Finaliza a batalha
             await api.put(`/torneio/batalha/${batalha.id}`, {
                 id: batalha.id,
                 pontuacaoA: pontuacaoFinalA,
@@ -66,7 +82,28 @@ export default function Administrar() {
                 vencedora: vencedora
             })
 
-            alert("Batalha finalizada com sucesso!")
+            await api.put(`/startup/${batalha.startupA.id}`, {
+                pontuacao: pontuacaoFinalA,
+                contPitch: contPitchA,
+                contBug: contBugA,
+                contTracao: contTracaoA,
+                contInvestidor: contInvestidorA,
+                contPenalidade: contPenalidadeA
+              })
+              
+              await api.put(`/startup/${batalha.startupB.id}`, {
+                pontuacao: pontuacaoFinalB,
+                contPitch: contPitchB,
+                contBug: contBugB,
+                contTracao: contTracaoB,
+                contInvestidor: contInvestidorB,
+                contPenalidade: contPenalidadeB
+              })
+              
+
+
+
+
             navigate('/sorteio')
         } catch (error) {
             console.error("Erro ao finalizar batalha:", error)
@@ -85,7 +122,7 @@ export default function Administrar() {
             setPontosB(batalhaCarregada.pontuacaoB)
         }
     }, [])
-    
+
 
     const eventos = [
         'Pitch convincente',

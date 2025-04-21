@@ -82,6 +82,12 @@ export default function Sorteio() {
     if (todasFinalizadas) {
       api.post<Batalha[]>('/torneio/proxima-fase')
         .then(response => {
+          if (response.data.length === 0) {
+            // Torneio terminou — redireciona para /resultado
+            navigate('/resultado')
+            return
+          }
+
           const novasBatalhas = response.data.map((b, i) => ({
             ...b,
             selecionada: i === 0
@@ -94,6 +100,7 @@ export default function Sorteio() {
         })
     }
   }, [batalhas])
+
 
 
 
