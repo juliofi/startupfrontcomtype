@@ -19,7 +19,6 @@ export default function Cadastro() {
   const [ano, setAno] = useState<string>('')
   const [slogan, setSlogan] = useState<string>('')
   const [carregando, setCarregando] = useState(false)
-  const [carregandoProsseguir, setCarregandoProsseguir] = useState(false)
   const [carregandoAcao, setCarregandoAcao] = useState(false)
   const [deletandoIds, setDeletandoIds] = useState<number[]>([])
 
