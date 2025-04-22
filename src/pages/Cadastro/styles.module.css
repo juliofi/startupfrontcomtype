@@ -97,24 +97,9 @@ input:active {
 }
 
 
-  
-  button {
-    color: #FFFFFF;
-    background-color: #777777;
-    padding: 10px;
-    border: 1px solid #BBBBBB;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-  
-  button:disabled {
-    background-color: #999;
-    cursor: not-allowed;
-  }
-
   .cadastrar{
     color: #FFFFFF;
-    background-color: #777777;
+    background-color: var(--cinza-600);
     padding: 10px;
     border: 1px solid #BBBBBB;
     border-radius: 6px;
@@ -122,26 +107,21 @@ input:active {
   }
 
   .cadastrar:hover{
-    background-color: #666666;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    opacity: 0.9;
+    transition: opacity 0.2s ease, color 0.2s ease;
   }
 
-  .cadastrar:disabled{
-    background-color: #999;
-    cursor: not-allowed;
+  .cadastrar:active{
+    background-color: var(--cinza-800);
   }
-  
-  .form > button {
-    background-color: gray;
-    color: white;
-  }
+
   
   .prosseguir {
-    margin: 40px 0px 0px 0px;
+    margin: 20px 0px 0px 0px;
     font-size: 12px;
     width: 100%;
     height: 40px;
-    background-color: #222222;
+    background-color: var(--preto-400);
     color: #FFFFFF;
     cursor: pointer;
     border-radius: 8px;
@@ -149,7 +129,12 @@ input:active {
   }
 
   .prosseguir:hover{
-    background-color: #111111;
+    opacity: 0.9;
+    transition: opacity 0.2s ease, color 0.2s ease;
+  }
+
+  .prosseguir:active{
+    background-color: var(--preto-600);
   }
 
   .numero {
@@ -171,5 +156,41 @@ input:active {
     transform: scale(0.8); /* efeito de "afundar" no clique */
   }
   
+  .loader {
+    width: 14px;
+    height: 14px;
+    border: 2px solid white;
+    border-top: 2px solid #999;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .loaderPreta {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #ccc;
+    border-top: 2px solid black;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+  }
+  
+  .loaderContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 16px 0;
+  }
+  
+
+  
+
   
   

@@ -20,3 +20,44 @@
     gap: 16px;
     padding: 16px;
 }
+
+.resetar{
+    color: #FFFFFF;
+    background-color: var(--cinza-600);
+    padding: 10px 40px;
+    border: 1px solid #BBBBBB;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .resetar:hover{
+    opacity: 0.9;
+    transition: opacity 0.2s ease, color 0.2s ease;
+  }
+
+  .resetar:active{
+    background-color: var(--cinza-800);
+  }
+
+  .loader {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #ccc;
+    border-top: 2px solid black;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+  }
+  
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  .loaderContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 16px 0;
+  }
+  

@@ -23,6 +23,8 @@ interface Batalha {
 
 export default function Administrar() {
     const [batalha, setBatalha] = useState<Batalha | null>(null)
+    const [carregando, setCarregando] = useState(true)
+
     const navigate = useNavigate()
 
 
@@ -70,9 +72,11 @@ export default function Administrar() {
         const contInvestidorB = Number(checksB[3])
         const contPenalidadeB = Number(checksB[4])
 
-
+        setCarregando(true) // Mostra "Carregando..." enquanto finaliza
 
         try {
+
+            setCarregando(true)
             // 1. Finaliza a batalha
             await api.put(`/torneio/batalha/${batalha.id}`, {
                 id: batalha.id,
@@ -89,17 +93,17 @@ export default function Administrar() {
                 contTracao: contTracaoA,
                 contInvestidor: contInvestidorA,
                 contPenalidade: contPenalidadeA
-              })
-              
-              await api.put(`/startup/${batalha.startupB.id}`, {
+            })
+
+            await api.put(`/startup/${batalha.startupB.id}`, {
                 pontuacao: pontuacaoFinalB,
                 contPitch: contPitchB,
                 contBug: contBugB,
                 contTracao: contTracaoB,
                 contInvestidor: contInvestidorB,
                 contPenalidade: contPenalidadeB
-              })
-              
+            })
+
 
 
 
@@ -108,12 +112,14 @@ export default function Administrar() {
         } catch (error) {
             console.error("Erro ao finalizar batalha:", error)
             alert("Erro ao finalizar batalha.")
+            setCarregando(false) // <- Em caso de erro, esconde manualmente
         }
     }
 
 
 
     useEffect(() => {
+        setCarregando(false) // <- Em caso de erro, esconde manualmente
         const batalhaSalva = localStorage.getItem('batalhaSelecionada')
         if (batalhaSalva) {
             const batalhaCarregada: Batalha = JSON.parse(batalhaSalva)
@@ -122,6 +128,8 @@ export default function Administrar() {
             setPontosB(batalhaCarregada.pontuacaoB)
         }
     }, [])
+
+
 
 
     const eventos = [
@@ -141,7 +149,6 @@ export default function Administrar() {
 
 
     if (!batalha) return null
-
     return (
         <div className={styles.container}>
             <div className={styles.wrapper}>
@@ -216,8 +223,15 @@ export default function Administrar() {
                     <span>(-8)</span>
                 </div>
             </div>
+            <button
+                className={styles.finalizar}
+                onClick={handleFinalizar}
+                disabled={carregando}
+            >
+                {carregando && <span className={styles.loader}></span>}
+                <span style={{ marginLeft: carregando ? '8px' : '0' }}>finalizar</span>
+            </button>
 
-            <button className={styles.finalizar} onClick={handleFinalizar}>finalizar</button>
         </div>
     )
 }

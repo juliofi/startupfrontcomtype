@@ -24,22 +24,14 @@ interface Batalha {
 
 export default function Sorteio() {
   const navigate = useNavigate()
-
-
-  const handleReset = async () => {
-    const confirmar = confirm("Tem certeza que deseja resetar o torneio? Isso apagará todas as startups e batalhas.")
-    if (!confirmar) return
-
-    try {
-      await api.delete('/torneio/reset')
-      alert('Torneio resetado com sucesso!')
-      setBatalhas([]) // limpa a tela
-    } catch (error) {
-      console.error("Erro ao resetar torneio:", error)
-      alert("Erro ao resetar torneio.")
-    }
+  const [batalhas, setBatalhas] = useState<Batalha[]>([])
+  const [carregando, setCarregando] = useState(true)
+  const selecionarBatalha = (index: number) => {
+    setBatalhas(batalhas.map((b, i) => ({
+      ...b,
+      selecionada: i === index
+    })))
   }
-
 
   const handleAdministrar = () => {
     const batalhaSelecionada = batalhas.find(b => b.selecionada)
@@ -54,29 +46,28 @@ export default function Sorteio() {
   }
 
 
-  const [batalhas, setBatalhas] = useState<Batalha[]>([])
 
   useEffect(() => {
     const carregarBatalhas = async () => {
       try {
         const response = await api.get<Batalha[]>('/torneio/batalhas')
-        if (response.data.length > 0) {
-          const batalhasCarregadas = response.data.map(b => ({ ...b }))
-          
-          setBatalhas(batalhasCarregadas)
-        }
+        const batalhasCarregadas = response.data.map(b => ({ ...b }))
+        setBatalhas(batalhasCarregadas)
       } catch (error) {
         alert('Erro ao carregar batalhas. Tente novamente.')
         console.error(error)
+      } finally {
+        setCarregando(false)
       }
     }
 
     carregarBatalhas()
   }, [])
 
+
+
   useEffect(() => {
     const todasFinalizadas = batalhas.length > 0 && batalhas.every(b => b.finalizada)
-
     if (todasFinalizadas) {
       api.post<Batalha[]>('/torneio/proxima-fase')
         .then(response => {
@@ -89,7 +80,7 @@ export default function Sorteio() {
           const novasBatalhas = response.data.map(b => ({
             ...b
           }))
-          
+
           setBatalhas(novasBatalhas)
         })
         .catch(err => {
@@ -101,35 +92,16 @@ export default function Sorteio() {
 
 
 
-
-  const embaralhar = async () => {
-    try {
-      const response = await api.post<Batalha[]>('/torneio/iniciar')
-
-      const batalhasComSelecao = response.data.map((batalha, i) => ({
-        ...batalha,
-        selecionada: i === 0
-      }))
-
-      setBatalhas(batalhasComSelecao)
-    } catch (error) {
-      console.error('Erro ao embaralhar batalhas:', error)
-    }
-  }
-
-  const selecionarBatalha = (index: number) => {
-    setBatalhas(batalhas.map((b, i) => ({
-      ...b,
-      selecionada: i === index
-    })))
-  }
-
-
   const algumaFinalizada = batalhas.some(b => b.finalizada)
 
   return (
     <div className={styles.container}>
       <h1 className={styles.titulo}>Batalhas</h1>
+      {carregando && (
+        <div className={styles.loaderContainer}>
+          <span className={styles.loader}></span>
+        </div>
+      )}
 
       <Chaveamento
         batalhas={batalhas.map(b => ({
@@ -151,16 +123,6 @@ export default function Sorteio() {
 
 
       <div className={styles.botoes}>
-
-        <button className={styles.resetar} onClick={handleReset}>resetar</button>
-
-        <button
-          className={styles.embaralhar}
-          onClick={embaralhar}
-          disabled={algumaFinalizada}
-        >
-          embaralhar
-        </button>
 
         <button className={styles.administrar} onClick={handleAdministrar} >administrar</button>
       </div>

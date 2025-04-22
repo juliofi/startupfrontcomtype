@@ -16,23 +16,22 @@ interface Startup {
 
 export default function Resultado() {
   const [ranking, setRanking] = useState<Startup[]>([])
+  const [carregando, setCarregando] = useState(false)
+
 
   const handleReset = async () => {
-    const confirmar = confirm("Tem certeza que deseja resetar o torneio? Isso apagará todas as startups e batalhas.")
-    if (!confirmar) return
-  
+    setCarregando(true)
     try {
       await api.delete('/torneio/reset')
-      alert('Torneio resetado com sucesso!')
-      // opcionalmente: redireciona para /cadastro
       window.location.href = '/cadastro'
     } catch (error) {
       console.error("Erro ao resetar torneio:", error)
-      alert("Erro ao resetar torneio.")
+      setCarregando(false)
     }
   }
-  
-  
+
+
+
 
   useEffect(() => {
     api.get<Startup[]>('/torneio/ranking')
@@ -51,7 +50,19 @@ export default function Resultado() {
         <Coluna titulo="Investidores Irritados" infos={ranking.map(s => `${s.contInvestidor}`)} />
         <Coluna titulo="Penalidades" infos={ranking.map(s => `${s.contPenalidade}`)} />
       </div>
-      <button className={styles.resetar} onClick={handleReset}>resetar</button>
+      {carregando ? (
+        <div className={styles.loaderContainer}>
+          <span className={styles.loader}></span>
+        </div>
+      ) : (
+        <button className={styles.resetar} onClick={handleReset} disabled={carregando}>
+          {carregando && <span className={styles.loader}></span>}
+          resetar
+        </button>
+
+
+      )}
+
     </div>
   )
 }

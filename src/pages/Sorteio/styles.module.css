@@ -1,62 +1,60 @@
-.container{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
 }
 
 .titulo {
-    margin: 0;
-    padding: 0;
-    font-size: 28px;
-    font-weight: 400;
+  margin: 0;
+  padding: 0;
+  font-size: 28px;
+  font-weight: 400;
 }
 
-.botoes{
-    display: flex;
-    flex-direction: row;
-    gap: 16px;
+.botoes {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
 }
 
-.embaralhar{
-    color: #FFFFFF;
-    background-color: #777777;
-    padding: 10px;
-    border: 1px solid #BBBBBB;
-    border-radius: 6px;
-    cursor: pointer;
+.administrar {
+  color: #FFFFFF;
+  background-color: var(--preto-400);
+  padding: 10px;
+  border: 1px solid #BBBBBB;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.administrar:hover {
+  opacity: 0.9;
+  transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+.administrar:active {
+  background-color: var(--preto-600);
+}
+
+.loader {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #ccc;
+  border-top: 2px solid black;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
+}
 
-  .administrar{
-    color: #FFFFFF;
-    background-color: #222222;
-    padding: 10px;
-    border: 1px solid #BBBBBB;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-
-  .administrar:hover{
-    background-color: #111111;
-  }
-
-  .embaralhar:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  .resetar {
-    background-color: crimson;
-    color: white;
-    padding: 8px 16px;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-  }
-  
-  
-
-
-
-
+.loaderContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 16px 0;
+}

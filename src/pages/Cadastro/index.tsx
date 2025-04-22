@@ -18,6 +18,10 @@ export default function Cadastro() {
   const [nome, setNome] = useState<string>('')
   const [ano, setAno] = useState<string>('')
   const [slogan, setSlogan] = useState<string>('')
+  const [carregando, setCarregando] = useState(false)
+  const [carregandoProsseguir, setCarregandoProsseguir] = useState(false)
+
+
 
   const cadastrarStartupsTeste = async () => {
     const nomes = ["Primeira", "Segunda", "Terceira", "Quarta", "Quinta", "Sexta", "Sétima", "Oitava"];
@@ -40,48 +44,50 @@ export default function Cadastro() {
     setStartups(response.data);
   };
 
-
   const handleProsseguir = async () => {
     if (![4, 6, 8].includes(startups.length)) {
       alert('É necessário ter 4, 6 ou 8 startups cadastradas para iniciar o torneio.')
       return
     }
-  
+
+    setCarregandoProsseguir(true)
+
     try {
-      // 1. Envia o POST para iniciar o torneio
       await api.post('/torneio/iniciar')
-  
-      // 2. Navega para o sorteio
       navigate('/sorteio')
     } catch (error) {
       console.error('Erro ao iniciar o torneio:', error)
       alert('Erro ao iniciar o torneio.')
+      setCarregandoProsseguir(false)
     }
   }
-  
+
+
 
 
   const handleCadastrar = async (): Promise<void> => {
     if (startups.length >= 8 || !nome || !ano || !slogan) return
 
+    setCarregando(true)
+
     try {
       await api.post('/startup', {
         nome,
-        ano: parseInt(ano), // backend espera Integer
+        ano: parseInt(ano),
         slogan,
-        pontuacao: 35
+        pontuacao: 70
       })
 
-      // Atualiza a lista após cadastro
       const response = await api.get('/startup')
       setStartups(response.data)
 
-      // Limpa os campos
       setNome('')
       setAno('')
       setSlogan('')
     } catch (error) {
       console.error('Erro ao cadastrar startup:', error)
+    } finally {
+      setCarregando(false)
     }
   }
 
@@ -160,10 +166,26 @@ export default function Cadastro() {
           value={slogan}
           onChange={e => setSlogan(e.target.value)}
         />
-        <button className={styles.cadastrar} onClick={handleCadastrar}>cadastrar</button>
+        <button
+          className={styles.cadastrar}
+          onClick={handleCadastrar}
+          disabled={carregando}
+        >
+          {carregando && <span className={styles.loader}></span>}
+          <span style={{ marginLeft: carregando ? '8px' : '0' }}>cadastrar</span>
+        </button>
+
       </div>
 
-      <button className={styles.prosseguir} onClick={handleProsseguir}>prosseguir</button>
+      {carregandoProsseguir ? (
+        <div className={styles.loaderContainer}>
+          <span className={styles.loaderPreta}></span>
+        </div>
+      ) : (
+        <button className={styles.prosseguir} onClick={handleProsseguir}>
+          prosseguir
+        </button>
+      )}
 
       <button onClick={cadastrarStartupsTeste} className={styles.teste}>
         teste
