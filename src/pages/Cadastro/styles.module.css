@@ -119,9 +119,8 @@ input:active {
 
 
 .prosseguir {
-  margin: 20px 0px 0px 0px;
   font-size: 12px;
-  width: 100%;
+  width: 68%;
   height: 40px;
   background-color: var(--preto-400);
   color: #FFFFFF;
@@ -202,3 +201,44 @@ input:active {
   animation: spin 0.6s linear infinite;
   margin-left: 6px;
 }
+
+.linhaBotoes {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.botoes{
+  margin: 16px 0px 0px 0px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+  width: 100%;
+}
+
+
+
+
+.teste {
+  font-size: 12px;
+  width: 30%;
+  height: 40px;
+  background-color: var(--cinza-600);
+  color: #FFFFFF;
+  cursor: pointer;
+  border-radius: 8px;
+  border: 1px solid #BBBBBB;
+}
+
+.teste:hover {
+  opacity: 0.9;
+  transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+.teste:active {
+  background-color: var(--cinza-800);
+}
+

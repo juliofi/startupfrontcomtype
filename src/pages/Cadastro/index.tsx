@@ -20,6 +20,7 @@ export default function Cadastro() {
   const [slogan, setSlogan] = useState<string>('')
   const [carregando, setCarregando] = useState(false)
   const [carregandoProsseguir, setCarregandoProsseguir] = useState(false)
+  const [carregandoAcao, setCarregandoAcao] = useState(false)
   const [deletandoIds, setDeletandoIds] = useState<number[]>([])
 
 
@@ -31,7 +32,7 @@ export default function Cadastro() {
       return
     }
 
-    setCarregandoProsseguir(true)
+    setCarregandoAcao(true)
 
     try {
       await api.post('/torneio/iniciar')
@@ -39,12 +40,9 @@ export default function Cadastro() {
     } catch (error) {
       console.error('Erro ao iniciar o torneio:', error)
       alert('Erro ao iniciar o torneio.')
-      setCarregandoProsseguir(false)
+      setCarregandoAcao(false)
     }
   }
-
-
-
 
   const handleCadastrar = async (): Promise<void> => {
     // Validação da quantidade de startups
@@ -123,6 +121,35 @@ export default function Cadastro() {
     }
   }
 
+  const handleTeste = async () => {
+    setCarregandoAcao(true)
+    try {
+      // Reset do banco
+      await api.delete('/torneio/reset')
+
+      // Cadastra 8 startups de teste
+      const nomes = ["Primeira", "Segunda", "Terceira", "Quarta", "Quinta", "Sexta", "Sétima", "Oitava"]
+      for (let i = 0; i < nomes.length; i++) {
+        await api.post('/startup', {
+          nome: nomes[i],
+          ano: 2001 + i,
+          slogan: `${nomes[i].toLowerCase()} startup teste`,
+          pontuacao: 70
+        })
+      }
+
+      // Atualiza lista
+      const response = await api.get('/startup')
+      setStartups(response.data)
+
+    } catch (error) {
+      console.error("Erro ao cadastrar startups de teste:", error)
+      alert("Erro ao cadastrar startups de teste")
+    } finally {
+      setCarregandoAcao(false)
+    }
+  }
+
 
 
   return (
@@ -187,15 +214,21 @@ export default function Cadastro() {
 
       </div>
 
-      {carregandoProsseguir ? (
+      {carregandoAcao ? (
         <div className={styles.loaderContainer}>
           <span className={styles.loaderPreta}></span>
         </div>
       ) : (
-        <button className={styles.prosseguir} onClick={handleProsseguir}>
-          prosseguir
-        </button>
+        <div className={styles.botoes}>
+          <button className={styles.teste} onClick={handleTeste}>
+            teste
+          </button>
+          <button className={styles.prosseguir} onClick={handleProsseguir}>
+            prosseguir
+          </button>
+        </div>
       )}
+
     </div>
   )
 }
