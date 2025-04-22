@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import styles from './styles.module.css'
-import Confetti from 'react-confetti'
-import api from '../../services/api'
+import Confetti from 'react-confetti'   
 
 
 interface Startup {
