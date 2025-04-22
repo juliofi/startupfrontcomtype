@@ -51,8 +51,18 @@ export default function Sorteio() {
     const carregarBatalhas = async () => {
       try {
         const response = await api.get<Batalha[]>('/torneio/batalhas')
-        const batalhasCarregadas = response.data.map(b => ({ ...b }))
-        setBatalhas(batalhasCarregadas)
+  
+        // Se já havia uma batalha selecionada, preserva a seleção
+        setBatalhas(prev => {
+          const selecionadaId = prev.find(b => b.selecionada)?.id
+  
+          const batalhasCarregadas = response.data.map(b => ({
+            ...b,
+            selecionada: b.id === selecionadaId
+          }))
+  
+          return batalhasCarregadas
+        })
       } catch (error) {
         alert('Erro ao carregar batalhas. Tente novamente.')
         console.error(error)
@@ -60,9 +70,10 @@ export default function Sorteio() {
         setCarregando(false)
       }
     }
-
+  
     carregarBatalhas()
   }, [])
+  
 
 
 
