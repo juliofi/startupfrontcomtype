@@ -1,7 +1,7 @@
-import axios from 'axios';
+import axios from 'axios'
 
 const api = axios.create({
-    baseURL: 'http://localhost:8080' // Porta do backend local
-  });
+  baseURL: 'https://startupback.onrender.com' // nova URL do backend
+})
 
-export default api;
+export default api
