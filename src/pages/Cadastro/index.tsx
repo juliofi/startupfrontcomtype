@@ -20,29 +20,10 @@ export default function Cadastro() {
   const [slogan, setSlogan] = useState<string>('')
   const [carregando, setCarregando] = useState(false)
   const [carregandoProsseguir, setCarregandoProsseguir] = useState(false)
+  const [deletandoIds, setDeletandoIds] = useState<number[]>([])
 
 
 
-  const cadastrarStartupsTeste = async () => {
-    const nomes = ["Primeira", "Segunda", "Terceira", "Quarta", "Quinta", "Sexta", "Sétima", "Oitava"];
-
-    for (const nome of nomes) {
-      try {
-        await api.post('/startup', {
-          nome,
-          ano: 123,
-          slogan: '123',
-          pontuacao: 70
-        });
-      } catch (error) {
-        console.error(`Erro ao cadastrar ${nome}`, error);
-      }
-    }
-
-    // Atualiza a lista após cadastro
-    const response = await api.get('/startup');
-    setStartups(response.data);
-  };
 
   const handleProsseguir = async () => {
     if (![4, 8].includes(startups.length)) {
@@ -66,7 +47,32 @@ export default function Cadastro() {
 
 
   const handleCadastrar = async (): Promise<void> => {
-    if (startups.length >= 8 || !nome || !ano || !slogan) return
+    // Validação da quantidade de startups
+    if (startups.length >= 8) {
+      alert("Limite de 8 startups atingido.");
+      return;
+    }
+    // Validação do nome
+    if (!nome.trim() || nome.length > 30 || !/^[A-Za-zÀ-ÿ\s]+$/.test(nome)) {
+      alert("Nome deve ter entre 3 e 30 caracteres e conter apenas letras.");
+      return;
+    }
+
+    // Validação do ano
+    const anoNum = parseInt(ano);
+    const anoAtual = new Date().getFullYear();
+
+    if (!ano || isNaN(anoNum) || anoNum < 1900 || anoNum > anoAtual) {
+      alert(`Ano deve ser um número entre 1900 e ${anoAtual}`);
+      return;
+    }
+
+
+    // Validação do slogan
+    if (!slogan.trim() || slogan.length < 5 || slogan.length > 100) {
+      alert("Slogan deve ter entre 5 e 100 caracteres.");
+      return;
+    }
 
     setCarregando(true)
 
@@ -102,20 +108,21 @@ export default function Cadastro() {
     const startup = startups[index]
     if (!startup?.id) return
 
-    try {
-      // 1. Deleta todas as batalhas relacionadas com essa startup
-      await api.delete(`/torneio/batalhas-da-startup/${startup.id}`)
+    setDeletandoIds(prev => [...prev, startup.id]) // <- Marca como deletando
 
-      // 2. Agora sim, deleta a startup
+    try {
+      await api.delete(`/torneio/batalhas-da-startup/${startup.id}`)
       await api.delete(`/startup/${startup.id}`)
 
-      // 3. Atualiza a lista
       const response = await api.get('/startup')
       setStartups(response.data)
     } catch (error) {
       console.error('Erro ao deletar startup:', error)
+    } finally {
+      setDeletandoIds(prev => prev.filter(id => id !== startup.id)) // <- Remove da lista
     }
   }
+
 
 
   return (
@@ -131,6 +138,9 @@ export default function Cadastro() {
             </span>
             {startups[i] && (
               <span className={styles.icones}>
+                {deletandoIds.includes(startups[i].id) && (
+                  <span className={styles.loaderMini}></span>
+                )}
                 <FaTrash
                   className={styles.icone}
                   onClick={() => handleRemover(i)}
@@ -186,10 +196,6 @@ export default function Cadastro() {
           prosseguir
         </button>
       )}
-
-      <button onClick={cadastrarStartupsTeste} className={styles.teste}>
-        teste
-      </button>
     </div>
   )
 }
