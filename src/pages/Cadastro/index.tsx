@@ -135,7 +135,7 @@ export default function Cadastro() {
         { nome: "FitTrackr", ano: 2018, slogan: "Seu progresso, sua motivação" },
         { nome: "Recyclica", ano: 2017, slogan: "Reciclagem inteligente para um mundo sustentável" },
         { nome: "NeuroSync", ano: 2021, slogan: "Conectando cérebro e tecnologia" },
-        { nome: "StreamHive", ano: 2019, slogan: "Tudo que você ama, ao vivo" }
+        { nome: "StreamHive", ano: 2019, slogan: "Streaming inteligente, entretenimento sem limites" }
       ]
   
       for (const startup of startupsTeste) {
