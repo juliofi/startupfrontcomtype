@@ -125,22 +125,30 @@ export default function Cadastro() {
     try {
       // Reset do banco
       await api.delete('/torneio/reset')
-
-      // Cadastra 8 startups de teste
-      const nomes = ["Primeira", "Segunda", "Terceira", "Quarta", "Quinta", "Sexta", "Sétima", "Oitava"]
-      for (let i = 0; i < nomes.length; i++) {
+  
+      // Cadastra 8 startups reais de teste
+      const startupsTeste = [
+        { nome: "Ingressou", ano: 2024, slogan: "de fans para fans" },
+        { nome: "Bookly", ano: 2022, slogan: "A biblioteca que cabe no seu bolso" },
+        { nome: "TrackPet", ano: 2016, slogan: "Tecnologia para cuidar de quem te ama de volta" },
+        { nome: "InovaPlay", ano: 2015, slogan: "Entretenimento para a nova geração" },
+        { nome: "FitTrackr", ano: 2018, slogan: "Seu progresso, sua motivação" },
+        { nome: "Recyclica", ano: 2017, slogan: "Reciclagem inteligente para um mundo sustentável" },
+        { nome: "NeuroSync", ano: 2021, slogan: "Conectando cérebro e tecnologia" },
+        { nome: "StreamHive", ano: 2019, slogan: "Tudo que você ama, ao vivo" }
+      ]
+  
+      for (const startup of startupsTeste) {
         await api.post('/startup', {
-          nome: nomes[i],
-          ano: 2001 + i,
-          slogan: `${nomes[i].toLowerCase()} startup teste`,
+          ...startup,
           pontuacao: 70
         })
       }
-
+  
       // Atualiza lista
       const response = await api.get('/startup')
       setStartups(response.data)
-
+  
     } catch (error) {
       console.error("Erro ao cadastrar startups de teste:", error)
       alert("Erro ao cadastrar startups de teste")
@@ -148,6 +156,7 @@ export default function Cadastro() {
       setCarregandoAcao(false)
     }
   }
+  
 
 
 
