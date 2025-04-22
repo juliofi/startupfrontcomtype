@@ -108,7 +108,7 @@ export default function Administrar() {
 
 
 
-            navigate('/sorteio')
+            navigate('/batalhas')
         } catch (error) {
             console.error("Erro ao finalizar batalha:", error)
             alert("Erro ao finalizar batalha.")

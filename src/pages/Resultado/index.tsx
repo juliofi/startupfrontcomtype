@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import styles from './styles.module.css'
 import Coluna from '../../components/Coluna'
 import api from '../../services/api'
+import { useNavigate } from 'react-router-dom'
+
 
 interface Startup {
   id: number
@@ -16,22 +18,13 @@ interface Startup {
 
 export default function Resultado() {
   const [ranking, setRanking] = useState<Startup[]>([])
-  const [carregando, setCarregando] = useState(false)
+  const navigate = useNavigate()
 
 
-  const handleReset = async () => {
-    setCarregando(true)
-    try {
-      await api.delete('/torneio/reset')
-      window.location.href = '/cadastro'
-    } catch (error) {
-      console.error("Erro ao resetar torneio:", error)
-      setCarregando(false)
-    }
+  const handlePremiacao = () => {
+    localStorage.setItem('rankingFinal', JSON.stringify(ranking))
+    navigate('/premiacao')
   }
-
-
-
 
   useEffect(() => {
     api.get<Startup[]>('/torneio/ranking')
@@ -50,18 +43,10 @@ export default function Resultado() {
         <Coluna titulo="Investidores Irritados" infos={ranking.map(s => `${s.contInvestidor}`)} />
         <Coluna titulo="Penalidades" infos={ranking.map(s => `${s.contPenalidade}`)} />
       </div>
-      {carregando ? (
-        <div className={styles.loaderContainer}>
-          <span className={styles.loader}></span>
-        </div>
-      ) : (
-        <button className={styles.resetar} onClick={handleReset} disabled={carregando}>
-          {carregando && <span className={styles.loader}></span>}
-          resetar
-        </button>
 
-
-      )}
+      <button className={styles.premiacao} onClick={handlePremiacao}>
+        ver premiação
+      </button>
 
     </div>
   )

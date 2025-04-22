@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 16px;
+  gap: 32px;
 }
 
 .titulo {
@@ -22,7 +22,7 @@
 .administrar {
   color: #FFFFFF;
   background-color: var(--preto-400);
-  padding: 10px;
+  padding: 10px 20px;
   border: 1px solid #BBBBBB;
   border-radius: 6px;
   cursor: pointer;

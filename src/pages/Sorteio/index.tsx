@@ -26,6 +26,8 @@ export default function Sorteio() {
   const navigate = useNavigate()
   const [batalhas, setBatalhas] = useState<Batalha[]>([])
   const [carregando, setCarregando] = useState(true)
+  const [proximaFaseEnviada, setProximaFaseEnviada] = useState(false)
+
   const selecionarBatalha = (index: number) => {
     setBatalhas(batalhas.map((b, i) => ({
       ...b,
@@ -51,16 +53,16 @@ export default function Sorteio() {
     const carregarBatalhas = async () => {
       try {
         const response = await api.get<Batalha[]>('/torneio/batalhas')
-  
+
         // Se já havia uma batalha selecionada, preserva a seleção
         setBatalhas(prev => {
           const selecionadaId = prev.find(b => b.selecionada)?.id
-  
+
           const batalhasCarregadas = response.data.map(b => ({
             ...b,
             selecionada: b.id === selecionadaId
           }))
-  
+
           return batalhasCarregadas
         })
       } catch (error) {
@@ -70,21 +72,23 @@ export default function Sorteio() {
         setCarregando(false)
       }
     }
-  
+
     carregarBatalhas()
   }, [])
-  
+
 
 
 
   useEffect(() => {
     const todasFinalizadas = batalhas.length > 0 && batalhas.every(b => b.finalizada)
-    if (todasFinalizadas) {
+
+    if (todasFinalizadas && !proximaFaseEnviada) {
+      setProximaFaseEnviada(true) // evita chamadas duplicadas
+
       api.post<Batalha[]>('/torneio/proxima-fase')
         .then(response => {
           if (response.data.length === 0) {
-            // Torneio terminou — redireciona para /resultado
-            navigate('/resultado')
+            navigate('/info')
             return
           }
 
@@ -93,13 +97,16 @@ export default function Sorteio() {
           }))
 
           setBatalhas(novasBatalhas)
+          setProximaFaseEnviada(false) // resetar para próxima rodada
         })
         .catch(err => {
           console.error("Erro ao avançar para próxima fase:", err)
           alert("Erro ao avançar para próxima fase. Tente novamente.")
+          setProximaFaseEnviada(false)
         })
     }
   }, [batalhas])
+
 
 
   return (

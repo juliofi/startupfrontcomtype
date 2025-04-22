@@ -60,4 +60,23 @@
     align-items: center;
     margin: 16px 0;
   }
+
+  .premiacao{
+    color: #FFFFFF;
+    background-color: var(--cinza-600);
+    padding: 10px 40px;
+    border: 1px solid #BBBBBB;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .premiacao:hover{
+    opacity: 0.9;
+    transition: opacity 0.2s ease, color 0.2s ease;
+  }
+
+  .premiacao:active{
+    background-color: var(--cinza-800);
+  }
+
   

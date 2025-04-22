@@ -45,8 +45,8 @@ export default function Cadastro() {
   };
 
   const handleProsseguir = async () => {
-    if (![4, 6, 8].includes(startups.length)) {
-      alert('É necessário ter 4, 6 ou 8 startups cadastradas para iniciar o torneio.')
+    if (![4, 8].includes(startups.length)) {
+      alert('É necessário ter 4 ou 8 startups cadastradas para iniciar o torneio.')
       return
     }
 
@@ -54,7 +54,7 @@ export default function Cadastro() {
 
     try {
       await api.post('/torneio/iniciar')
-      navigate('/sorteio')
+      navigate('/batalhas')
     } catch (error) {
       console.error('Erro ao iniciar o torneio:', error)
       alert('Erro ao iniciar o torneio.')
