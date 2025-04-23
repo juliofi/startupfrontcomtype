@@ -82,7 +82,7 @@ export default function Batalhas() {
     const todasFinalizadas = batalhas.length > 0 && batalhas.every(b => b.finalizada)
 
     if (todasFinalizadas && !proximaFaseEnviada) {
-      setProximaFaseEnviada(true) // evita chamadas duplicadas
+      setProximaFaseEnviada(true)
 
       api.post<Batalha[]>('/torneio/proxima-fase')
         .then(response => {
@@ -96,7 +96,7 @@ export default function Batalhas() {
           }))
 
           setBatalhas(novasBatalhas)
-          setProximaFaseEnviada(false) // resetar para próxima rodada
+          setProximaFaseEnviada(false)
         })
         .catch(err => {
           console.error("Erro ao avançar para próxima fase:", err)
