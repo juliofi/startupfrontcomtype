@@ -54,7 +54,6 @@ export default function Batalhas() {
       try {
         const response = await api.get<Batalha[]>('/torneio/batalhas')
 
-        // Se já havia uma batalha selecionada, preserva a seleção
         setBatalhas(prev => {
           const selecionadaId = prev.find(b => b.selecionada)?.id
 
