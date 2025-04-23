@@ -22,7 +22,7 @@ interface Batalha {
   selecionada?: boolean // só existe no front
 }
 
-export default function Sorteio() {
+export default function Batalhas() {
   const navigate = useNavigate()
   const [batalhas, setBatalhas] = useState<Batalha[]>([])
   const [carregando, setCarregando] = useState(true)
