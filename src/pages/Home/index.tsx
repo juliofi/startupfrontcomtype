@@ -11,7 +11,7 @@ export default function Home() {
     setCarregando(true)
 
     try {
-      localStorage.clear(); // <- apaga o estado salvo no navegador
+      localStorage.clear(); 
       await api.delete('/torneio/reset')
       navigate('/cadastro')
     } catch (error) {

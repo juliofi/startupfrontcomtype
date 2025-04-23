@@ -19,7 +19,7 @@ interface Batalha {
   pontuacaoB: number
   finalizada: boolean
   vencedora: Startup | null
-  selecionada?: boolean // só existe no front
+  selecionada?: boolean 
 }
 
 export default function Batalhas() {

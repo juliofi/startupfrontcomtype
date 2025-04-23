@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import styles from './styles.module.css'
 import { FaTrash } from 'react-icons/fa'
-import api from '../../services/api' // 👈 caminho para o arquivo que criou
+import api from '../../services/api'
 import { useNavigate } from 'react-router-dom'
 
 
@@ -44,18 +44,18 @@ export default function Cadastro() {
   }
 
   const handleCadastrar = async (): Promise<void> => {
-    // Validação da quantidade de startups
+    
     if (startups.length >= 8) {
       alert("Limite de 8 startups atingido.");
       return;
     }
-    // Validação do nome
+    
     if (!nome.trim() || nome.length > 30 || !/^[A-Za-zÀ-ÿ\s]+$/.test(nome)) {
       alert("Nome deve ter entre 3 e 30 caracteres e conter apenas letras.");
       return;
     }
 
-    // Validação do ano
+  
     const anoNum = parseInt(ano);
     const anoAtual = new Date().getFullYear();
 
@@ -65,7 +65,7 @@ export default function Cadastro() {
     }
 
 
-    // Validação do slogan
+  
     if (!slogan.trim() || slogan.length < 5 || slogan.length > 100) {
       alert("Slogan deve ter entre 5 e 100 caracteres.");
       return;
@@ -94,7 +94,7 @@ export default function Cadastro() {
     }
   }
 
-  // Carrega startups já cadastradas do banco ao abrir a página
+
   useEffect(() => {
     api.get('/startup')
       .then(response => setStartups(response.data))
@@ -105,7 +105,7 @@ export default function Cadastro() {
     const startup = startups[index]
     if (!startup?.id) return
 
-    setDeletandoIds(prev => [...prev, startup.id]) // <- Marca como deletando
+    setDeletandoIds(prev => [...prev, startup.id])
 
     try {
       await api.delete(`/torneio/batalhas-da-startup/${startup.id}`)
@@ -116,17 +116,17 @@ export default function Cadastro() {
     } catch (error) {
       console.error('Erro ao deletar startup:', error)
     } finally {
-      setDeletandoIds(prev => prev.filter(id => id !== startup.id)) // <- Remove da lista
+      setDeletandoIds(prev => prev.filter(id => id !== startup.id))
     }
   }
 
   const handleTeste = async () => {
     setCarregandoAcao(true)
     try {
-      // Reset do banco
+  
       await api.delete('/torneio/reset')
   
-      // Cadastra 8 startups reais de teste
+
       const startupsTeste = [
         { nome: "Ingressou", ano: 2024, slogan: "de fans para fans" },
         { nome: "Bookly", ano: 2022, slogan: "A biblioteca que cabe no seu bolso" },
@@ -145,7 +145,7 @@ export default function Cadastro() {
         })
       }
   
-      // Atualiza lista
+
       const response = await api.get('/startup')
       setStartups(response.data)
   

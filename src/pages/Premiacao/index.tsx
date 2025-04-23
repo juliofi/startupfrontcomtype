@@ -25,7 +25,7 @@ export default function Premiacao() {
 
 
     useEffect(() => {
-        const dados = localStorage.getItem('rankingFinal') // <- aqui!
+        const dados = localStorage.getItem('rankingFinal')
         if (dados) {
             try {
                 const parsed = JSON.parse(dados)

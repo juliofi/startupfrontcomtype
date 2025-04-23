@@ -40,7 +40,6 @@ export default function Administrar() {
             if (checksB[index]) pontosB += pontuacoes[index]
         })
 
-        // Shark Fight
         if (pontosA === pontosB) {
             const vencedorAleatorio = Math.random() < 0.5 ? 'A' : 'B'
             if (vencedorAleatorio === 'A') pontosA += 2
@@ -59,7 +58,6 @@ export default function Administrar() {
         const pontuacaoFinalA = vencedora === batalha.startupA.nome ? pontosA + 30 : pontosA
         const pontuacaoFinalB = vencedora === batalha.startupB.nome ? pontosB + 30 : pontosB
 
-        // Mapear contadores a partir dos checkboxes
         const contPitchA = Number(checksA[0])
         const contBugA = Number(checksA[1])
         const contTracaoA = Number(checksA[2])
@@ -72,12 +70,12 @@ export default function Administrar() {
         const contInvestidorB = Number(checksB[3])
         const contPenalidadeB = Number(checksB[4])
 
-        setCarregando(true) // Mostra "Carregando..." enquanto finaliza
+        setCarregando(true)
 
         try {
 
             setCarregando(true)
-            // 1. Finaliza a batalha
+           
             await api.put(`/torneio/batalha/${batalha.id}`, {
                 id: batalha.id,
                 pontuacaoA: pontuacaoFinalA,
@@ -112,14 +110,14 @@ export default function Administrar() {
         } catch (error) {
             console.error("Erro ao finalizar batalha:", error)
             alert("Erro ao finalizar batalha.")
-            setCarregando(false) // <- Em caso de erro, esconde manualmente
+            setCarregando(false)
         }
     }
 
 
 
     useEffect(() => {
-        setCarregando(false) // <- Em caso de erro, esconde manualmente
+        setCarregando(false)
         const batalhaSalva = localStorage.getItem('batalhaSelecionada')
         if (batalhaSalva) {
             const batalhaCarregada: Batalha = JSON.parse(batalhaSalva)
